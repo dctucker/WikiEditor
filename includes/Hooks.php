@@ -250,6 +250,14 @@ class Hooks implements
 	}
 
 	/**
+	 * @param string $contentModel
+	 * @return bool
+	 */
+	private static function isContentModelSupported( $contentModel ) {
+		return in_array( $contentModel, [CONTENT_MODEL_WIKITEXT,'markdown'] );
+	}
+
+	/**
 	 * EditPage::showEditForm:initial hook
 	 *
 	 * Adds the modules to the edit form
@@ -258,7 +266,7 @@ class Hooks implements
 	 * @param OutputPage $outputPage object.
 	 */
 	public function onEditPage__showEditForm_initial( $editPage, $outputPage ) {
-		if ( $editPage->contentModel !== CONTENT_MODEL_WIKITEXT ) {
+		if ( ! self::isContentModelSupported( $editPage->contentModel ) ) {
 			return;
 		}
 
@@ -331,7 +339,7 @@ class Hooks implements
 			)
 		);
 
-		if ( $editPage->contentModel !== CONTENT_MODEL_WIKITEXT
+		if ( !self::isContentModelSupported($editPage->contentModel)
 			|| !ExtensionRegistry::getInstance()->isLoaded( 'EventLogging' ) ) {
 			return;
 		}
